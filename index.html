@@ -2,279 +2,350 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Theo Coach">
 <title>Theo — AI Coach</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{--bg:#fff;--bg2:#f5f5f3;--bg3:#ebebea;--text:#1a1a1a;--text2:#666;--border:#e0e0de;--green:#3B6D11;--green-bg:#EAF3DE;--blue:#185FA5;--blue-bg:#E6F1FB;--amber:#854F0B;--amber-bg:#FAEEDA;--red:#A32D2D;--red-bg:#FCEBEB;}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;--text:#f2f2f7;--text2:#98989e;--border:#38383a;}}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;}
-.app{max-width:430px;margin:0 auto;background:var(--bg3);min-height:100vh;display:flex;flex-direction:column;}
-.header{background:var(--bg);padding:16px 16px 10px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.header-left h1{font-size:18px;font-weight:600;}
-.header-left p{font-size:12px;color:var(--text2);margin-top:1px;}
-.avatar{width:36px;height:36px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--green);}
-.content{flex:1;padding:12px;overflow-y:auto;}
-.nav{background:var(--bg);border-top:0.5px solid var(--border);display:flex;padding:6px 0 10px;}
-.nb{flex:1;border:none;background:transparent;padding:4px 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--text2);font-family:inherit;}
-.nb.on{color:var(--green);}
-.nb span{font-size:22px;line-height:1;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#ebebea;
+  --text:#1a1a1a;--text2:#6b6b6b;--border:#e0e0de;
+  --green:#3B6D11;--gbg:#EAF3DE;
+  --blue:#185FA5;--bbg:#E6F1FB;
+  --amber:#854F0B;--abg:#FAEEDA;
+  --red:#A32D2D;--rbg:#FCEBEB;
+  --purple:#534AB7;--pbg:#EEEDFE;
+  --radius:14px;--shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;--text:#f2f2f7;--text2:#98989e;--border:#38383a;}
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;overscroll-behavior:none;}
+.app{max-width:430px;margin:0 auto;background:var(--bg3);min-height:100vh;display:flex;flex-direction:column;position:relative;}
+
+/* Header */
+.hdr{background:var(--bg);padding:52px 16px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.hdr h1{font-size:20px;font-weight:700;letter-spacing:-.3px;}
+.hdr p{font-size:12px;color:var(--text2);margin-top:2px;}
+.avi{width:38px;height:38px;border-radius:50%;background:var(--gbg);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--green);}
+
+/* Content */
+.content{flex:1;padding:12px 12px 90px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .scr{display:none;}
 .scr.on{display:block;}
-.card{background:var(--bg);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.sec{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+
+/* Nav */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg);border-top:0.5px solid var(--border);display:flex;padding:8px 0 20px;z-index:100;}
+.nb{flex:1;border:none;background:transparent;padding:4px 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--text2);font-family:inherit;font-weight:500;}
+.nb.on{color:var(--green);}
+.nb .ico{font-size:24px;line-height:1;}
+
+/* Cards */
+.card{background:var(--bg);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);}
+.sec{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+
+/* Metric grid */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-.mc{background:var(--bg2);border-radius:10px;padding:10px 12px;}
+.mc{background:var(--bg2);border-radius:10px;padding:11px 12px;}
 .ml{font-size:11px;color:var(--text2);margin-bottom:2px;}
-.mv{font-size:18px;font-weight:600;}
-.ms{font-size:10px;color:var(--text2);margin-top:1px;}
-.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
+.mv{font-size:18px;font-weight:700;letter-spacing:-.3px;}
+.ms{font-size:10px;color:var(--text2);margin-top:2px;}
+
+/* Rows */
+.row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
 .row:last-child{border-bottom:none;}
-.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;}
-.bg-g{background:var(--green-bg);color:var(--green);}
-.bg-b{background:var(--blue-bg);color:var(--blue);}
-.bg-a{background:var(--amber-bg);color:var(--amber);}
-.bg-r{background:var(--red-bg);color:var(--red);}
-input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);color:var(--text);font-size:14px;margin-bottom:8px;font-family:inherit;outline:none;}
-input:focus,textarea:focus{border-color:var(--green);}
-textarea{resize:vertical;min-height:70px;}
-label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;}
-.pbtn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px;}
+.rl{color:var(--text2);}
+
+/* Badges */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.bg{background:var(--gbg);color:var(--green);}
+.bb{background:var(--bbg);color:var(--blue);}
+.ba{background:var(--abg);color:var(--amber);}
+.br{background:var(--rbg);color:var(--red);}
+.bp{background:var(--pbg);color:var(--purple);}
+
+/* Forms */
+input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);color:var(--text);font-size:15px;margin-bottom:8px;font-family:inherit;outline:none;appearance:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--green);}
+textarea{resize:vertical;min-height:75px;line-height:1.5;}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500;}
+
+/* Buttons */
+.pbtn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:8px;letter-spacing:-.2px;}
 .pbtn:active{opacity:.85;}
-.sbtn{width:100%;padding:11px 14px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:12px;font-size:14px;cursor:pointer;margin-bottom:8px;text-align:left;font-family:inherit;}
-.ebar{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-top:4px;}
-.efill{height:100%;border-radius:3px;transition:width .4s;}
+.sbtn{width:100%;padding:12px 14px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:12px;font-size:14px;cursor:pointer;margin-bottom:8px;text-align:left;font-family:inherit;font-weight:500;}
+.sbtn:active{opacity:.75;}
+
+/* Progress bars */
+.ebar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-top:4px;}
+.efill{height:100%;border-radius:3px;transition:width .5s ease;}
+
+/* Emoji grid */
 .egrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px;}
-.emo{padding:10px 0;border:1.5px solid var(--border);border-radius:10px;background:var(--bg2);font-size:20px;cursor:pointer;text-align:center;transition:all .15s;}
-.emo.sel{border-color:var(--green);background:var(--green-bg);}
-.bubble{background:var(--bg2);border-radius:14px 14px 14px 4px;padding:10px 14px;font-size:14px;line-height:1.6;margin-bottom:8px;max-width:90%;}
-.ububble{background:var(--green-bg);color:var(--green);border-radius:14px 14px 4px 14px;padding:10px 14px;font-size:14px;line-height:1.6;margin-bottom:8px;max-width:90%;margin-left:auto;}
-.chat-wrap{display:flex;gap:8px;margin-top:8px;padding-bottom:4px;}
-.chat-wrap input{margin-bottom:0;flex:1;}
-.csend{padding:10px 14px;background:var(--green);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:16px;}
+.emo{padding:11px 0;border:1.5px solid var(--border);border-radius:10px;background:var(--bg2);font-size:22px;cursor:pointer;text-align:center;transition:all .15s;}
+.emo:active{transform:scale(.92);}
+.emo.sel{border-color:var(--green);background:var(--gbg);}
+
+/* Today box */
+.tbox{background:var(--gbg);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+.tbox .tn{font-size:11px;font-weight:700;color:var(--green);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;}
+.tbox .ts{font-size:16px;font-weight:700;color:#1a4a06;margin-bottom:5px;}
+.tbox .td{font-size:13px;color:#2d6b0d;line-height:1.5;}
+
+/* Chat */
+.bubble{background:var(--bg2);border-radius:16px 16px 16px 4px;padding:11px 14px;font-size:14px;line-height:1.6;margin-bottom:8px;max-width:88%;white-space:pre-wrap;}
+.ububble{background:var(--gbg);color:#1a4a06;border-radius:16px 16px 4px 16px;padding:11px 14px;font-size:14px;line-height:1.6;margin-bottom:8px;max-width:88%;margin-left:auto;}
+.cinput{display:flex;gap:8px;margin-top:8px;position:sticky;bottom:0;background:var(--bg3);padding:8px 0 4px;}
+.cinput input{margin-bottom:0;flex:1;}
+.csend{padding:11px 15px;background:var(--green);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:18px;flex-shrink:0;}
 .qbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.qb{padding:6px 12px;border:1px solid var(--border);border-radius:20px;background:var(--bg2);font-size:12px;cursor:pointer;color:var(--text2);font-family:inherit;}
-.today-box{background:var(--green-bg);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
-.today-box .tn{font-size:12px;font-weight:600;color:var(--green);margin-bottom:3px;}
-.today-box .ts{font-size:15px;font-weight:600;color:#1e4d06;margin-bottom:4px;}
-.today-box .td{font-size:13px;color:#2d6b0d;line-height:1.5;}
-.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.slider-row input[type=range]{flex:1;margin-bottom:0;}
-.slider-val{font-size:16px;font-weight:600;min-width:38px;text-align:right;}
-.meal-item{padding:8px 0;border-bottom:0.5px solid var(--border);}
-.meal-item:last-child{border-bottom:none;}
-.race-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);}
-.race-item:last-child{border-bottom:none;}
-.delbtn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px;}
-.food-resp{background:var(--green-bg);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.6;color:#1e4d06;display:none;}
+.qb{padding:7px 13px;border:1px solid var(--border);border-radius:20px;background:var(--bg);font-size:12px;cursor:pointer;color:var(--text2);font-family:inherit;font-weight:500;}
+.qb:active{opacity:.7;}
+
+/* Food resp */
+.fresp{background:var(--gbg);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.6;color:#1a4a06;display:none;}
+
+/* Slider */
+.srow{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.srow input[type=range]{flex:1;margin-bottom:0;accent-color:var(--green);}
+.sval{font-size:17px;font-weight:700;min-width:36px;text-align:right;}
+
+/* Race item */
+.ri{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);}
+.ri:last-child{border-bottom:none;}
+.delbtn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:2px 6px;}
+
+/* Setup banner */
+.setup{background:var(--abg);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:var(--amber);line-height:1.6;}
+.setup strong{display:block;margin-bottom:4px;font-size:14px;}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="header">
-    <div class="header-left">
-      <h1 id="greet">Hey Theo 👋</h1>
-      <p id="ddate"></p>
-    </div>
-    <div class="avatar">T</div>
+
+<div class="hdr">
+  <div>
+    <h1 id="greet">Hey Theo 👋</h1>
+    <p id="ddate"></p>
   </div>
-
-  <div class="content">
-
-    <!-- HOME -->
-    <div id="s-home" class="scr on">
-      <div class="today-box">
-        <div class="tn">Today's session</div>
-        <div class="ts" id="t-name">Rest</div>
-        <div class="td" id="t-detail"></div>
-      </div>
-      <div class="g2">
-        <div class="mc"><div class="ml">FTP</div><div class="mv" style="color:var(--blue);">327 W</div><div class="ms">4.94 W/kg</div></div>
-        <div class="mc"><div class="ml">CP / W'</div><div class="mv" style="color:var(--green);">388 W</div><div class="ms">11.9 kJ</div></div>
-        <div class="mc"><div class="ml">Weight</div><div class="mv" id="h-wt">66.2 kg</div><div class="ms">target 70 kg</div></div>
-        <div class="mc"><div class="ml">First race</div><div class="mv" id="h-d2r" style="font-size:15px;">—</div><div class="ms">15 Feb 2027</div></div>
-      </div>
-      <div class="card">
-        <div class="sec">Today's targets</div>
-        <div class="row"><span style="color:var(--text2);">Protein</span><span id="h-prot">0 / 150g</span></div>
-        <div class="ebar"><div class="efill" style="background:var(--green);" id="h-pb" ></div></div>
-        <div class="row" style="margin-top:8px;"><span style="color:var(--text2);">Calories</span><span id="h-cals">0 / 2900 kcal</span></div>
-        <div class="ebar"><div class="efill" style="background:var(--amber);" id="h-cb"></div></div>
-      </div>
-      <div class="card">
-        <div class="sec">Upcoming races</div>
-        <div id="h-races"><p style="font-size:13px;color:var(--text2);">No races added yet.</p></div>
-      </div>
-      <button class="sbtn" onclick="go('ci',1)">➕&nbsp; Log today's check-in</button>
-      <button class="sbtn" onclick="reschedule()">📅&nbsp; Can't train today — reschedule</button>
-    </div>
-
-    <!-- CHECK-IN -->
-    <div id="s-ci" class="scr">
-      <div class="card">
-        <div class="sec">How did you sleep?</div>
-        <div class="egrid">
-          <div class="emo" onclick="pick('sleep','😴 Terrible',this)">😴</div>
-          <div class="emo" onclick="pick('sleep','😞 Bad',this)">😞</div>
-          <div class="emo" onclick="pick('sleep','😐 OK',this)">😐</div>
-          <div class="emo" onclick="pick('sleep','😊 Good',this)">😊</div>
-          <div class="emo" onclick="pick('sleep','🤩 Excellent',this)">🤩</div>
-        </div>
-        <label>Hours slept</label>
-        <div class="slider-row">
-          <input type="range" min="4" max="12" step="0.5" value="7.5" id="sh" oninput="document.getElementById('shv').textContent=parseFloat(this.value).toFixed(1)+'h'">
-          <span class="slider-val" id="shv">7.5h</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="sec">How are your legs?</div>
-        <div class="egrid">
-          <div class="emo" onclick="pick('legs','💀 Destroyed',this)">💀</div>
-          <div class="emo" onclick="pick('legs','😩 Heavy',this)">😩</div>
-          <div class="emo" onclick="pick('legs','😐 OK',this)">😐</div>
-          <div class="emo" onclick="pick('legs','💪 Good',this)">💪</div>
-          <div class="emo" onclick="pick('legs','🚀 Flying',this)">🚀</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="sec">Motivation?</div>
-        <div class="egrid">
-          <div class="emo" onclick="pick('mot','😶 Zero',this)">😶</div>
-          <div class="emo" onclick="pick('mot','😔 Low',this)">😔</div>
-          <div class="emo" onclick="pick('mot','😐 OK',this)">😐</div>
-          <div class="emo" onclick="pick('mot','😤 Fired up',this)">😤</div>
-          <div class="emo" onclick="pick('mot','🔥 On fire',this)">🔥</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="sec">Notes + weight</div>
-        <label>Illness, stress, exams, anything relevant</label>
-        <textarea id="ci-notes" placeholder="e.g. feeling under the weather, big exam tomorrow, SMMA client stress..."></textarea>
-        <label>Morning weight (kg)</label>
-        <input type="number" id="ci-wt" placeholder="66.2" step="0.1" min="55" max="90">
-        <button class="pbtn" onclick="doCheckin()">Submit check-in ↗</button>
-      </div>
-      <div id="ci-resp" class="bubble" style="display:none;"></div>
-    </div>
-
-    <!-- FOOD -->
-    <div id="s-food" class="scr">
-      <div class="card">
-        <div class="sec">Today's nutrition</div>
-        <div class="row"><span style="color:var(--text2);">Calories</span><span id="f-c">0 / 2900 kcal</span></div>
-        <div class="ebar"><div class="efill" style="background:var(--amber);" id="f-cb"></div></div>
-        <div class="row" style="margin-top:8px;"><span style="color:var(--text2);">Protein</span><span id="f-p">0 / 150g</span></div>
-        <div class="ebar"><div class="efill" style="background:var(--green);" id="f-pb"></div></div>
-        <div class="row" style="margin-top:8px;"><span style="color:var(--text2);">Carbs</span><span id="f-carb">0 / 400g</span></div>
-        <div class="ebar"><div class="efill" style="background:var(--blue);" id="f-cbb"></div></div>
-      </div>
-      <div class="card">
-        <div class="sec">Log a meal</div>
-        <label>Describe what you ate — or describe a food photo</label>
-        <textarea id="f-desc" placeholder="e.g. 3 scrambled eggs, 2 slices sourdough toast, 200g greek yogurt, coffee&#10;&#10;Photo: large chicken breast ~200g, white rice ~200g cooked, broccoli, olive oil drizzle"></textarea>
-        <label>Meal type</label>
-        <select id="f-type">
-          <option>Breakfast</option><option>Lunch</option><option>Dinner</option>
-          <option>Snack</option><option>On-bike fuel</option><option>Recovery meal</option>
-        </select>
-        <button class="pbtn" onclick="doFood()">Analyse meal ↗</button>
-        <div class="food-resp" id="f-resp"></div>
-      </div>
-      <div class="card">
-        <div class="sec">Meals logged today</div>
-        <div id="f-list"><p style="font-size:13px;color:var(--text2);">None yet.</p></div>
-      </div>
-    </div>
-
-    <!-- RACES -->
-    <div id="s-race" class="scr">
-      <div class="card">
-        <div class="sec">Add a race</div>
-        <label>Race name</label>
-        <input type="text" id="r-name" placeholder="e.g. British National XCO Round 1 — Cannock Chase">
-        <label>Date</label>
-        <input type="date" id="r-date">
-        <label>Priority</label>
-        <select id="r-pri">
-          <option value="A">A race — full peak, full taper</option>
-          <option value="B">B race — good result, half taper</option>
-          <option value="C">C race — training race, no taper</option>
-        </select>
-        <label>Location / notes</label>
-        <input type="text" id="r-notes" placeholder="e.g. Cannock Chase, UK">
-        <button class="pbtn" onclick="addRace()">Add to calendar ↗</button>
-      </div>
-      <div class="card">
-        <div class="sec">Race calendar</div>
-        <div id="r-list"><p style="font-size:13px;color:var(--text2);">No races yet. Add your season above.</p></div>
-      </div>
-    </div>
-
-    <!-- COACH -->
-    <div id="s-coach" class="scr">
-      <div class="card" style="margin-bottom:8px;">
-        <div class="sec">Your profile — always loaded</div>
-        <div class="row"><span style="color:var(--text2);">FTP / CP / W'</span><span>327W · 388W · 11.9kJ</span></div>
-        <div class="row"><span style="color:var(--text2);">3min / 1min</span><span>455W / 587W</span></div>
-        <div class="row"><span style="color:var(--text2);">Sprint peak</span><span>1127W (17 W/kg)</span></div>
-        <div class="row"><span style="color:var(--text2);">Z2</span><span>163–228W · 151–166 bpm</span></div>
-        <div class="row"><span style="color:var(--text2);">Phase</span><span><span class="badge bg-g">Base 1</span></span></div>
-        <div class="row"><span style="color:var(--text2);">First race</span><span>15 Feb 2027</span></div>
-      </div>
-      <div id="msgs">
-        <div class="bubble">Hey Theo — I'm your AI coach with your full data loaded. Ask me anything: training, pacing, nutrition, race strategy, W' usage, how to peak for a specific race. What's on your mind?</div>
-      </div>
-      <div class="qbtns">
-        <button class="qb" onclick="qa("What should I do today?")">Today's session</button>
-        <button class="qb" onclick="qa("How do I pace short climbs without fear of blowing up?")">Race pacing</button>
-        <button class="qb" onclick="qa("What should I eat before a hard Z4 turbo session?")">Pre-session fuel</button>
-        <button class="qb" onclick="qa("Explain how to use my W prime tactically in XCO races")">W' tactics</button>
-        <button class="qb" onclick="qa("I can't train today, please reschedule my week")">Reschedule</button>
-        <button class="qb" onclick="qa("Am I on track for GB national squad?")">GB squad check</button>
-      </div>
-      <div class="chat-wrap">
-        <input type="text" id="c-inp" placeholder="Ask your coach..." onkeydown="if(event.key==='Enter')send()">
-        <button class="csend" onclick="send()">↑</button>
-      </div>
-    </div>
-
-  </div><!-- end content -->
-
-  <div class="nav">
-    <button class="nb on" onclick="go('home',0)"><span>🏠</span>Home</button>
-    <button class="nb" onclick="go('ci',1)"><span>❤️</span>Check-in</button>
-    <button class="nb" onclick="go('food',2)"><span>🍎</span>Food</button>
-    <button class="nb" onclick="go('race',3)"><span>🏆</span>Races</button>
-    <button class="nb" onclick="go('coach',4)"><span>💬</span>Coach</button>
-  </div>
+  <div class="avi">T</div>
 </div>
 
-<script>
-var S = {ci:{sleep:'',legs:'',mot:''},food:{meals:[],cals:0,prot:0,carbs:0},races:[],wt:66.2};
-try{var tmp=localStorage.getItem('theo_coach');if(tmp)S=JSON.parse(tmp);}catch(e){}
-function sv(){try{localStorage.setItem('theo_coach',JSON.stringify(S));}catch(e){}}
+<div class="content">
 
-var screens=['home','ci','food','race','coach'];
+  <!-- HOME -->
+  <div id="s-home" class="scr on">
+    <div class="tbox">
+      <div class="tn">Today's session</div>
+      <div class="ts" id="t-name">—</div>
+      <div class="td" id="t-detail">—</div>
+    </div>
+    <div class="g2">
+      <div class="mc"><div class="ml">FTP</div><div class="mv" style="color:var(--blue)">327 W</div><div class="ms">4.94 W/kg</div></div>
+      <div class="mc"><div class="ml">CP / W'</div><div class="mv" style="color:var(--green)">388 W</div><div class="ms">11.9 kJ</div></div>
+      <div class="mc"><div class="ml">Weight</div><div class="mv" id="h-wt">66.2 kg</div><div class="ms">target 70 kg</div></div>
+      <div class="mc"><div class="ml">First race</div><div class="mv" id="h-d2r" style="font-size:15px">—</div><div class="ms">15 Feb 2027</div></div>
+    </div>
+    <div class="card">
+      <div class="sec">Today's targets</div>
+      <div class="row"><span class="rl">Protein</span><span id="h-prot">0 / 150g</span></div>
+      <div class="ebar"><div class="efill" style="background:var(--green)" id="h-pb"></div></div>
+      <div class="row" style="margin-top:8px"><span class="rl">Calories</span><span id="h-cals">0 / 2900 kcal</span></div>
+      <div class="ebar"><div class="efill" style="background:var(--amber)" id="h-cb"></div></div>
+    </div>
+    <div class="card">
+      <div class="sec">Upcoming races</div>
+      <div id="h-races"><p style="font-size:13px;color:var(--text2)">No races added yet — go to Races tab.</p></div>
+    </div>
+    <button class="sbtn" onclick="go('ci',1)">➕ &nbsp;Log today's check-in</button>
+    <button class="sbtn" onclick="reschedule()">📅 &nbsp;Can't train today — reschedule</button>
+  </div>
+
+  <!-- CHECK-IN -->
+  <div id="s-ci" class="scr">
+    <div class="card">
+      <div class="sec">How did you sleep?</div>
+      <div class="egrid">
+        <div class="emo" onclick="pick('sleep','😴 Terrible',this)">😴</div>
+        <div class="emo" onclick="pick('sleep','😞 Bad',this)">😞</div>
+        <div class="emo" onclick="pick('sleep','😐 OK',this)">😐</div>
+        <div class="emo" onclick="pick('sleep','😊 Good',this)">😊</div>
+        <div class="emo" onclick="pick('sleep','🤩 Excellent',this)">🤩</div>
+      </div>
+      <label>Hours slept</label>
+      <div class="srow">
+        <input type="range" min="4" max="12" step="0.5" value="7.5" id="sh" oninput="document.getElementById('shv').textContent=parseFloat(this.value).toFixed(1)+'h'">
+        <span class="sval" id="shv">7.5h</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec">How are your legs?</div>
+      <div class="egrid">
+        <div class="emo" onclick="pick('legs','💀 Destroyed',this)">💀</div>
+        <div class="emo" onclick="pick('legs','😩 Heavy',this)">😩</div>
+        <div class="emo" onclick="pick('legs','😐 OK',this)">😐</div>
+        <div class="emo" onclick="pick('legs','💪 Good',this)">💪</div>
+        <div class="emo" onclick="pick('legs','🚀 Flying',this)">🚀</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec">Motivation?</div>
+      <div class="egrid">
+        <div class="emo" onclick="pick('mot','😶 Zero',this)">😶</div>
+        <div class="emo" onclick="pick('mot','😔 Low',this)">😔</div>
+        <div class="emo" onclick="pick('mot','😐 OK',this)">😐</div>
+        <div class="emo" onclick="pick('mot','😤 Fired up',this)">😤</div>
+        <div class="emo" onclick="pick('mot','🔥 On fire',this)">🔥</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec">Notes + weight</div>
+      <label>Illness, stress, exams, busy day, anything relevant</label>
+      <textarea id="ci-notes" placeholder="e.g. feeling rough, big exam tomorrow, SMMA client stress, late night..."></textarea>
+      <label>Morning weight (kg)</label>
+      <input type="number" id="ci-wt" placeholder="66.2" step="0.1" min="55" max="90">
+      <button class="pbtn" onclick="doCheckin()">Submit check-in ↗</button>
+    </div>
+    <div id="ci-resp" class="bubble" style="display:none"></div>
+  </div>
+
+  <!-- FOOD -->
+  <div id="s-food" class="scr">
+    <div class="card">
+      <div class="sec">Today's nutrition</div>
+      <div class="row"><span class="rl">Calories</span><span id="f-c">0 / 2900 kcal</span></div>
+      <div class="ebar"><div class="efill" style="background:var(--amber)" id="f-cb"></div></div>
+      <div class="row" style="margin-top:8px"><span class="rl">Protein</span><span id="f-p">0 / 150g</span></div>
+      <div class="ebar"><div class="efill" style="background:var(--green)" id="f-pb"></div></div>
+      <div class="row" style="margin-top:8px"><span class="rl">Carbs</span><span id="f-carb">0 / 400g</span></div>
+      <div class="ebar"><div class="efill" style="background:var(--blue)" id="f-cbb"></div></div>
+    </div>
+    <div class="card">
+      <div class="sec">Log a meal</div>
+      <label>Describe what you ate — or describe a food photo</label>
+      <textarea id="f-desc" placeholder="e.g. 3 scrambled eggs, 2 slices sourdough, 200g greek yogurt, coffee&#10;&#10;Photo: chicken breast ~200g, white rice ~200g cooked, broccoli, olive oil"></textarea>
+      <label>Meal type</label>
+      <select id="f-type">
+        <option>Breakfast</option><option>Lunch</option><option>Dinner</option>
+        <option>Snack</option><option>On-bike fuel</option><option>Recovery meal</option>
+      </select>
+      <button class="pbtn" onclick="doFood()">Analyse meal ↗</button>
+      <div class="fresp" id="f-resp"></div>
+    </div>
+    <div class="card">
+      <div class="sec">Meals logged today</div>
+      <div id="f-list"><p style="font-size:13px;color:var(--text2)">None yet.</p></div>
+    </div>
+  </div>
+
+  <!-- RACES -->
+  <div id="s-race" class="scr">
+    <div class="card">
+      <div class="sec">Add a race</div>
+      <label>Race name</label>
+      <input type="text" id="r-name" placeholder="e.g. British National XCO Round 1 — Cannock Chase">
+      <label>Date</label>
+      <input type="date" id="r-date">
+      <label>Priority</label>
+      <select id="r-pri">
+        <option value="A">A race — full peak, full taper</option>
+        <option value="B">B race — good result, half taper</option>
+        <option value="C">C race — training race, no taper</option>
+      </select>
+      <label>Location / notes</label>
+      <input type="text" id="r-notes" placeholder="e.g. Cannock Chase, UK — national series round 1">
+      <button class="pbtn" onclick="addRace()">Add to calendar ↗</button>
+    </div>
+    <div class="card">
+      <div class="sec">Race calendar</div>
+      <div id="r-list"><p style="font-size:13px;color:var(--text2)">No races yet.</p></div>
+    </div>
+  </div>
+
+  <!-- COACH -->
+  <div id="s-coach" class="scr">
+    <div id="setup-banner" class="setup" style="display:none">
+      <strong>⚙️ Setup needed</strong>
+      Open <code>index.html</code> and replace <code>YOUR_WORKER_URL</code> with your Cloudflare Worker URL to enable AI chat.
+    </div>
+    <div class="card" style="margin-bottom:8px">
+      <div class="sec">Your profile — always loaded</div>
+      <div class="row"><span class="rl">FTP / CP / W'</span><span>327W · 388W · 11.9kJ</span></div>
+      <div class="row"><span class="rl">3min / 1min</span><span>455W / 587W</span></div>
+      <div class="row"><span class="rl">Sprint peak</span><span>1127W · 17 W/kg</span></div>
+      <div class="row"><span class="rl">Z2 power / HR</span><span>163–228W · 151–166bpm</span></div>
+      <div class="row"><span class="rl">Phase</span><span><span class="badge bg">Base 1</span></span></div>
+      <div class="row"><span class="rl">First race</span><span>15 Feb 2027</span></div>
+    </div>
+    <div id="msgs">
+      <div class="bubble">Hey Theo — I'm your AI coach with your full data loaded. Ask me anything: training, pacing, nutrition, race strategy, W' usage, how to peak for a specific race, anything. What's on your mind?</div>
+    </div>
+    <div class="qbtns">
+      <button class="qb" onclick="qa('What should I do today?')">Today's session</button>
+      <button class="qb" onclick="qa('How do I pace short climbs without fear of blowing up?')">Race pacing</button>
+      <button class="qb" onclick="qa('What should I eat before a hard Z4 turbo session?')">Pre-session fuel</button>
+      <button class="qb" onclick="qa('Explain how to use my W prime tactically in XCO races')">W' tactics</button>
+      <button class="qb" onclick="qa('I can\\'t train today, please reschedule my week')">Reschedule</button>
+      <button class="qb" onclick="qa('Am I on track for GB national squad selection?')">GB squad check</button>
+    </div>
+    <div class="cinput">
+      <input type="text" id="c-inp" placeholder="Ask your coach..." onkeydown="if(event.key==='Enter')send()">
+      <button class="csend" onclick="send()">↑</button>
+    </div>
+  </div>
+
+</div><!-- end content -->
+
+<div class="nav">
+  <button class="nb on" onclick="go('home',0)"><span class="ico">🏠</span>Home</button>
+  <button class="nb" onclick="go('ci',1)"><span class="ico">❤️</span>Check-in</button>
+  <button class="nb" onclick="go('food',2)"><span class="ico">🍎</span>Food</button>
+  <button class="nb" onclick="go('race',3)"><span class="ico">🏆</span>Races</button>
+  <button class="nb" onclick="go('coach',4)"><span class="ico">💬</span>Coach</button>
+</div>
+</div><!-- end app -->
+
+<script>
+// ⚡ REPLACE THIS with your Cloudflare Worker URL after deployment
+// e.g. 'https://theo-coach.YOUR-NAME.workers.dev'
+var WORKER_URL = 'https://theo-coach.pls-do-not-reply802.workers.dev';
+
+var S = {ci:{sleep:'',legs:'',mot:'',notes:''},food:{meals:[],cals:0,prot:0,carbs:0},races:[],wt:66.2};
+try{var tmp=localStorage.getItem('tc3');if(tmp)S=JSON.parse(tmp);}catch(e){}
+function sv(){try{localStorage.setItem('tc3',JSON.stringify(S));}catch(e){}}
+
+var scrNames=['home','ci','food','race','coach'];
 function go(n,i){
-  screens.forEach(function(s){document.getElementById('s-'+s).classList.remove('on');});
+  scrNames.forEach(function(s){document.getElementById('s-'+s).classList.remove('on');});
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
   document.getElementById('s-'+n).classList.add('on');
   document.querySelectorAll('.nb')[i].classList.add('on');
   if(n==='home')homeUp();
   if(n==='food')foodUp();
   if(n==='race')raceUp();
+  if(n==='coach'&&WORKER_URL==='YOUR_WORKER_URL')document.getElementById('setup-banner').style.display='block';
 }
 
 var sessions=['Rest — full recovery','Strength A','Z2 ride 2–2.5h','Strength B + rock climbing','Rock climbing','Z2 + sprints 2h','Long Z2 3.5–4h'];
-var details=['Sleep well, eat to targets, no training today.','Trap bar deadlift · Bulgarian split squat · RDL · Core · Box jumps. 60–75 min.','163–228W strictly · 151–166 bpm · Trail riding ideal · Fuel if over 75 min.','Strength B: pull-ups, push-up to row, overhead press, Pallof press. Then 90 min rock climbing.','90 min climbing. Technique focus. Build grip and upper body strength.','2h Z2 (163–228W) then 4–6 × 10 sec seated sprints at max. Full recovery between each.','3.5–4h mostly Z2. Fuel every 30–40 min from min 30. Biggest aerobic stimulus of the week.'];
+var details=[
+  'Sleep well, eat to targets, no training today.',
+  'Trap bar deadlift · Bulgarian split squat · RDL · Core · Box jumps. 60–75 min.',
+  '163–228W strictly · 151–166 bpm · Trail riding ideal · Fuel if ride >75 min.',
+  'Strength B (pull-ups, press, core) then 90 min rock climbing.',
+  '90 min rock climbing. Technique and upper body strength focus.',
+  '2h Z2 (163–228W) then 4–6 × 10 sec seated sprints, full recovery between.',
+  '3.5–4h mostly Z2. Fuel every 30–40 min from min 30. Biggest aerobic day of the week.'
+];
 
 function homeUp(){
   var now=new Date();
   var h=now.getHours();
   document.getElementById('greet').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', Theo 👋';
   document.getElementById('ddate').textContent=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  var race1=new Date('2027-02-15');
-  document.getElementById('h-d2r').textContent=Math.ceil((race1-now)/86400000)+'d';
+  var d2r=Math.ceil((new Date('2027-02-15')-now)/86400000);
+  document.getElementById('h-d2r').textContent=d2r+'d';
   var di=(now.getDay()+6)%7;
   document.getElementById('t-name').textContent=sessions[di];
   document.getElementById('t-detail').textContent=details[di];
@@ -286,11 +357,11 @@ function homeUp(){
   document.getElementById('h-cb').style.width=Math.min(100,c/2900*100)+'%';
   var now2=new Date(),hr=document.getElementById('h-races');
   var up=S.races.filter(function(r){return new Date(r.date)>now2;}).slice(0,4);
-  if(!up.length){hr.innerHTML='<p style="font-size:13px;color:var(--text2);">No races added yet — go to Races tab.</p>';return;}
+  if(!up.length){hr.innerHTML='<p style="font-size:13px;color:var(--text2)">No races added yet.</p>';return;}
   hr.innerHTML=up.map(function(r){
     var d=Math.ceil((new Date(r.date)-now2)/86400000);
-    var cl={A:'bg-r',B:'bg-a',C:'bg-b'}[r.priority];
-    return '<div class="row"><span style="font-size:13px;">'+r.name.substring(0,26)+'</span><span><span class="badge '+cl+'">'+r.priority+'</span>&nbsp;<span style="font-size:11px;color:var(--text2);">'+d+'d</span></span></div>';
+    var cl={A:'br',B:'ba',C:'bb'}[r.priority];
+    return '<div class="row"><span style="font-size:13px">'+r.name.substring(0,28)+'</span><span><span class="badge '+cl+'">'+r.priority+'</span> <span style="font-size:11px;color:var(--text2)">'+d+'d</span></span></div>';
   }).join('');
 }
 
@@ -305,15 +376,15 @@ async function doCheckin(){
   var wt=document.getElementById('ci-wt').value;
   var hrs=document.getElementById('sh').value;
   if(wt)S.wt=parseFloat(wt);
+  S.ci.notes=notes;sv();
   var el=document.getElementById('ci-resp');
   el.style.display='block';el.textContent='Analysing your check-in...';
-  var p='You are Theo\'s personal cycling coach. Athlete: FTP 327W CP 388W W\' 11.9kJ weight 66.2kg target 70kg. Phase: Base 1 (Z2 rides, strength 3x/week). Daily targets: 2900 kcal 150g protein.\n\nCheck-in:\n- Sleep: '+(S.ci.sleep||'not logged')+' ('+hrs+'h)\n- Legs: '+(S.ci.legs||'not logged')+'\n- Motivation: '+(S.ci.mot||'not logged')+'\n- Notes: '+(notes||'none')+'\n- Weight: '+(wt?wt+'kg':'not logged')+'\n\nGive Theo a direct coaching response (max 80 words): what to do today, any training adjustment based on how he feels, one nutrition reminder. Be specific like a real coach. No fluff.';
+  if(WORKER_URL==='YOUR_WORKER_URL'){el.textContent='⚙️ Set up your Cloudflare Worker to enable AI responses. For now, check-in data is saved.';return;}
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:p}]})});
+    var r=await fetch(WORKER_URL+'/checkin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sleep:S.ci.sleep,legs:S.ci.legs,mot:S.ci.mot,notes,weight:wt,hours:hrs})});
     var d=await r.json();
     el.textContent=d.content[0].text;
-    S.ci.notes=notes;sv();
-  }catch(e){el.textContent='Check-in saved. Go to Coach tab to discuss your day.';}
+  }catch(e){el.textContent='Check-in saved. Go to Coach tab for advice.';}
 }
 
 async function doFood(){
@@ -322,9 +393,9 @@ async function doFood(){
   if(!desc)return;
   var el=document.getElementById('f-resp');
   el.style.display='block';el.textContent='Analysing...';
-  var p='Sports nutritionist for elite junior MTB cyclist: 66.2kg, 2900 kcal/day target, 150g protein/day, 400g carbs/day, gaining 4kg lean muscle mass over 12 months.\n\nMeal ('+type+'): '+desc+'\n\nRespond ONLY with valid JSON, no markdown, no backticks:\n{"calories":number,"protein":number,"carbs":number,"fat":number,"feedback":"one specific coaching sentence about this meal for a cyclist trying to gain lean mass"}';
+  if(WORKER_URL==='YOUR_WORKER_URL'){el.textContent='⚙️ Set up Cloudflare Worker to enable AI food analysis.';return;}
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:p}]})});
+    var r=await fetch(WORKER_URL+'/food',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({description:desc,mealType:type})});
     var d=await r.json();
     var txt=d.content[0].text.replace(/```json|```/g,'').trim();
     var m=JSON.parse(txt);
@@ -337,7 +408,7 @@ async function doFood(){
     el.textContent='✓ '+Math.round(m.calories)+' kcal · '+Math.round(m.protein)+'g protein · '+Math.round(m.carbs)+'g carbs\n\n'+m.feedback;
     document.getElementById('f-desc').value='';
     foodUp();
-  }catch(e){el.textContent='Meal saved. Go to Coach tab for nutrition advice.';}
+  }catch(e){el.textContent='Error analysing meal. Try again.';}
 }
 
 function foodUp(){
@@ -349,9 +420,9 @@ function foodUp(){
   document.getElementById('f-pb').style.width=Math.min(100,p/150*100)+'%';
   document.getElementById('f-cbb').style.width=Math.min(100,carb/400*100)+'%';
   var ml=document.getElementById('f-list');
-  if(!S.food.meals.length){ml.innerHTML='<p style="font-size:13px;color:var(--text2);">None yet.</p>';return;}
+  if(!S.food.meals.length){ml.innerHTML='<p style="font-size:13px;color:var(--text2)">None yet.</p>';return;}
   ml.innerHTML=S.food.meals.map(function(m){
-    return '<div class="meal-item"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:13px;font-weight:600;">'+m.type+'</span><span style="font-size:12px;color:var(--text2);">'+m.time+' · '+Math.round(m.calories)+' kcal</span></div><div style="font-size:12px;color:var(--text2);margin-bottom:4px;">'+m.desc+'</div><div style="display:flex;gap:5px;"><span class="badge bg-g" style="font-size:10px;">'+Math.round(m.protein)+'g P</span><span class="badge bg-b" style="font-size:10px;">'+Math.round(m.carbs)+'g C</span><span class="badge bg-a" style="font-size:10px;">'+Math.round(m.fat)+'g F</span></div></div>';
+    return '<div style="padding:8px 0;border-bottom:0.5px solid var(--border)"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:13px;font-weight:600">'+m.type+'</span><span style="font-size:12px;color:var(--text2)">'+m.time+' · '+Math.round(m.calories)+' kcal</span></div><div style="font-size:12px;color:var(--text2);margin-bottom:4px">'+m.desc+'</div><div style="display:flex;gap:5px"><span class="badge bg" style="font-size:10px">'+Math.round(m.protein)+'g P</span><span class="badge bb" style="font-size:10px">'+Math.round(m.carbs)+'g C</span><span class="badge ba" style="font-size:10px">'+Math.round(m.fat||0)+'g F</span></div></div>';
   }).join('');
 }
 
@@ -364,37 +435,25 @@ function addRace(){
   S.races.push({name:n,date:d,priority:p,notes:nt});
   S.races.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   sv();
-  document.getElementById('r-name').value='';
-  document.getElementById('r-date').value='';
-  document.getElementById('r-notes').value='';
+  document.getElementById('r-name').value='';document.getElementById('r-date').value='';document.getElementById('r-notes').value='';
   raceUp();
 }
 
 function raceUp(){
-  var now=new Date();
-  var el=document.getElementById('r-list');
-  if(!S.races.length){el.innerHTML='<p style="font-size:13px;color:var(--text2);">No races yet.</p>';return;}
+  var now=new Date(),el=document.getElementById('r-list');
+  if(!S.races.length){el.innerHTML='<p style="font-size:13px;color:var(--text2)">No races yet.</p>';return;}
   el.innerHTML=S.races.map(function(r,i){
-    var d=new Date(r.date);
-    var dd=Math.ceil((d-now)/86400000);
-    var cl={A:'bg-r',B:'bg-a',C:'bg-b'}[r.priority];
-    return '<div class="race-item"><span class="badge '+cl+'" style="min-width:22px;text-align:center;">'+r.priority+'</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;">'+r.name+'</div><div style="font-size:11px;color:var(--text2);">'+d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+(r.notes?' · '+r.notes:'')+'</div></div><div style="text-align:right;"><div style="font-size:13px;font-weight:600;color:'+(dd<14&&dd>0?'var(--red)':'var(--text2)')+';">'+(dd<0?'done':dd+'d')+'</div><button class="delbtn" onclick="delR('+i+')">×</button></div></div>';
+    var d=new Date(r.date),dd=Math.ceil((d-now)/86400000);
+    var cl={A:'br',B:'ba',C:'bb'}[r.priority];
+    return '<div class="ri"><span class="badge '+cl+'" style="min-width:22px;text-align:center">'+r.priority+'</span><div style="flex:1"><div style="font-size:13px;font-weight:600">'+r.name+'</div><div style="font-size:11px;color:var(--text2)">'+d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+(r.notes?' · '+r.notes:'')+'</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:600;color:'+(dd<14&&dd>0?'var(--red)':'var(--text2)')+';">'+(dd<0?'done':dd+'d')+'</div><button class="delbtn" onclick="delR('+i+')">×</button></div></div>';
   }).join('');
 }
 
 function delR(i){S.races.splice(i,1);sv();raceUp();}
 
 var hist=[];
-
-function qa(q){
-  go('coach',4);
-  setTimeout(function(){document.getElementById('c-inp').value=q;send();},200);
-}
-
-function reschedule(){
-  go('coach',4);
-  setTimeout(function(){document.getElementById('c-inp').value="I can't train today — please reschedule my session and adjust my week around it";send();},200);
-}
+function qa(q){go('coach',4);setTimeout(function(){document.getElementById('c-inp').value=q;send();},150);}
+function reschedule(){go('coach',4);setTimeout(function(){document.getElementById('c-inp').value="I can't train today — please reschedule my session and adjust my week";send();},150);}
 
 async function send(){
   var inp=document.getElementById('c-inp');
@@ -403,15 +462,15 @@ async function send(){
   inp.value='';
   addMsg(msg,'u');
   hist.push({role:'user',content:msg});
-  var typing=addMsg('...','a');
-  var sys='You are Theo\'s personal cycling coach. You know everything about him:\n\nATHLETE PROFILE:\n- Age 17, 2nd year junior MTB XCO\n- Dual French/British nationality, racing for GB\n- Targeting U23 worlds, GB national squad\n- Weight: '+S.wt+'kg → 70kg target (lean gain). Height 186cm\n- FTP: 327W (4.94 W/kg)\n- CP: 388W (5.87 W/kg)\n- W\': 11.9 kJ\n- 3-min: 455W (6.87 W/kg)\n- 1-min: 587W (8.87 W/kg)\n- Sprint peak: 1127W (17 W/kg)\n- Z2 power: 163-228W · Z2 HR: 151-166bpm\n- Rest HR: 50 · Max HR: 195\n- HRR-1: 11bpm · HRR-2: 37bpm · Cardiac inertia: 57s\n\nCURRENT PHASE: Base 1 (Jun 2 – Jul 26 2026), SW France, flow trails available\nWeekly structure: Mon rest, Tue Strength A, Wed Z2 2-2.5h, Thu Strength B+rock climbing, Fri rock climbing, Sat Z2+sprints 2h, Sun Long Z2 3.5-4h\nMax 15h/week. Strength 3x/week. Skiing integrated Nov onwards (Innsbruck).\nUniversity starts Oct 5 in Innsbruck.\n\nNUTRITION: 2900-3100 kcal/day, 150-165g protein, 400g carbs hard days\nToday eaten: '+Math.round(S.food.cals||0)+' kcal, '+Math.round(S.food.prot||0)+'g protein\n\nCHECK-IN TODAY: Sleep '+S.ci.sleep+' · Legs '+S.ci.legs+' · Motivation '+S.ci.mot+(S.ci.notes?' · Notes: '+S.ci.notes:'')+'\n\nRACES: '+(S.races.length?S.races.map(function(r){return r.name+' ('+r.priority+') '+r.date;}).join(', '):'First race Feb 15 2027')+'\n\nKEY INSIGHT: Underperforms on short climbs due to fear of blowing up — not physical. W\' of 11.9kJ means he can sustain 60s at 600W and still have 8kJ left. Also runs SMMA business alongside training.\n\nBe direct, specific, like a real coach. Max 100 words unless detail truly needed. Reference his specific numbers when relevant.';
+  var t=addMsg('...','a');
+  if(WORKER_URL==='YOUR_WORKER_URL'){t.textContent='⚙️ Set up your Cloudflare Worker URL in the app code to enable AI coaching chat.';return;}
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:hist})});
+    var r=await fetch(WORKER_URL+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:hist,checkin:S.ci,food:S.food,races:S.races})});
     var d=await r.json();
     var rep=d.content[0].text;
     hist.push({role:'assistant',content:rep});
-    typing.textContent=rep;
-  }catch(e){typing.textContent='Connection issue — check your internet and try again.';}
+    t.textContent=rep;
+  }catch(e){t.textContent='Connection issue — check your internet and try again.';}
 }
 
 function addMsg(txt,role){
